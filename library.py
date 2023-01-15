@@ -38,7 +38,10 @@ class Library:
         return self.__books
 
     def delBook(self, i):
+        previous_size = len(self.__books)
         self.__books = list(filter(lambda l: not l.getISBN() == i, self.__books))
+        new_size = len(self.__books)
+        return not(new_size == previous_size)
 
     def serialize(self):
         return jsonify(books=[book.serialize() for book in self.__books])
