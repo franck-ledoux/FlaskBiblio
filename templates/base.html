@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <h1>Ma bibliotheque</h1>
+</head>
+<body>
+
+
+{% block content %}
+{% endblock %}
+
+ <form action="{{url_for('add_book')}}" method="post">
+            <br/>Titre: <input name="title" type="text" />
+            Auteur: <input name="author" type="text" />
+            ISBN: <input name="isbn" type="text" />
+            <input value="Ajouter" type="submit" />
+
+</body>
+</html>
+

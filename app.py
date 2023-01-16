@@ -28,14 +28,20 @@ def resource_not_found(e):
 @app.route('/')
 @app.route('/library/', methods=['GET'])
 def all_book():
-    response = make_response(lib.serialize())
-    response.headers["Content-Type"] = "application/json; charset=utf-8"
-    return response
+    accept_type = request.headers.get('Accept')
+    if 'application/xhtml+xml' in accept_type:
+        return render_template('library.html', books=lib.allBooks())
+    elif 'application/json' in accept_type:
+        response = make_response(lib.serialize())
+        response.headers["Content-Type"] = "application/json; charset=utf-8"
+        return response
+    #error cases now
+    return "wrong format request", 406
 
 @app.route('/library/', methods=['POST'])
 def add_book():
     content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
+    if 'application/json' in content_type:
         json = request.json
         if "isbn" in json and "author" in json and "title" in json:
             lib.addBook(json["title"], json["author"], json["isbn"])
@@ -45,8 +51,11 @@ def add_book():
             return response
         else:
             return {"message": "wrong format"}
+    elif 'x-www-form' in content_type:
+        lib.addBook(request.form["title"], request.form["author"], request.form["isbn"])
+        return render_template('library.html', books=lib.allBooks())
     else:
-        return {"message": "Content-Type not supported!"}
+        abort(404, description="Wrong book format ")
 
 @app.route('/library/<int:isbn>/<string:author>/<string:title>', methods=['PUT'])
 def add_book2(isbn, author, title):
