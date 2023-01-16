@@ -34,6 +34,7 @@ def all_book():
     elif 'application/json' in accept_type:
         response = make_response(lib.serialize())
         response.headers["Content-Type"] = "application/json; charset=utf-8"
+        response.headers["Access-Control-Allow-Origin"] = "*"
         return response
     #error cases now
     return "wrong format request", 406
